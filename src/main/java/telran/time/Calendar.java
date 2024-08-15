@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class Calendar {
     private final int DAYS_IN_WEEK = 7;
@@ -25,6 +26,21 @@ public class Calendar {
 
     public int getFirstDayOfWeek() {
         return firstDayOfWeek;
+    }
+
+    public String[] getCalendarDaysOfWeek() {
+        return getCalendarDaysOfWeek(Function.identity());
+    }
+    
+    public String[] getCalendarDaysOfWeek(Function<String, String>transformer) {
+        DayOfWeek[] days = DayOfWeek.values();
+        String[] weekDays = new String[7];
+        for (int i = 0; i < days.length; i++) {
+            int dayIndex = (firstDayOfWeek - 1 + i) % days.length;
+            String dayName = transformer.apply(days[dayIndex].name());
+            weekDays[i] = dayName;
+        }
+        return weekDays;
     }
 
     public Integer[][] getCalendarDates(int year, int month) {

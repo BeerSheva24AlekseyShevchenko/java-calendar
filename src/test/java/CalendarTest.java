@@ -39,4 +39,13 @@ public class CalendarTest {
             assertArrayEquals(arr2[i], expend2[i]);
         }
     }
+
+    @Test
+    void daysOfWeekTest() {
+        String[] extended1 = { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
+        assertArrayEquals(extended1, calendarMon.getCalendarDaysOfWeek());
+
+        String[] extended2 = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
+        assertArrayEquals(extended2, calendarSun.getCalendarDaysOfWeek((s) -> s.substring(0, 3)));
+    }
 }

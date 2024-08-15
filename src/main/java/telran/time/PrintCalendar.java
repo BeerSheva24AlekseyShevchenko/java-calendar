@@ -1,9 +1,6 @@
 package telran.time;
 
-import java.time.DayOfWeek;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PrintCalendar {
     private Calendar calendar;
@@ -42,15 +39,9 @@ public class PrintCalendar {
     }
 
     private void printWeekDays() {
-        DayOfWeek[] days = DayOfWeek.values();
-        List<String> weekDays = new ArrayList<>();
-        for (int i = 0; i < days.length; i++) {
-            int dayIndex = (calendar.getFirstDayOfWeek() - 1 + i) % days.length;
-            String dayName = days[dayIndex].name().substring(0, 3);
-            weekDays.add(dayName);
-        }
+        String[] daysOfWeek = calendar.getCalendarDaysOfWeek((s) -> s.substring(0, 3));
 
-        System.out.println(" " + String.join(" ", weekDays));
+        System.out.println(" " + String.join(" ", daysOfWeek));
     }
 
     private static void printTitle(MonthYear monthYear) {
