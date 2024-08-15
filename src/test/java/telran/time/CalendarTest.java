@@ -1,11 +1,10 @@
+package telran.time;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import java.time.DayOfWeek;
 
 import org.junit.jupiter.api.Test;
-
-import telran.time.Calendar;
 
 public class CalendarTest {
     Calendar calendarMon = new Calendar();

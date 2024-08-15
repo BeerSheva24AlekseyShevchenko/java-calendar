@@ -20,9 +20,9 @@ public class PrintCalendar {
     }
 
     private void printDates(MonthYear monthYear) {
-        Integer[][] days = calendar.getCalendarDates(monthYear.year(), monthYear.month());
-        for (int i = 0; i < days.length; i++) {
-            printWeek(days[i]);
+        Integer[][] dates = calendar.getCalendarDates(monthYear.year(), monthYear.month());
+        for (Integer[] week: dates) {
+            printWeek(week);
         }
     }
 
