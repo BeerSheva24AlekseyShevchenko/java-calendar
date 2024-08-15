@@ -1,94 +1,47 @@
 package telran.time;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.YearMonth;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.time.Year;
+import java.util.function.Supplier;
 record MonthYear(int month, int year) {}
 public class Main {
     public static void main(String[] args) {
         try {
             MonthYear monthYear = getMonthYear(args);
-            printCalendar(monthYear);
+            Calendar calendar = new Calendar(7);
+            PrintCalendar printCalendar = new PrintCalendar(calendar);
+            printCalendar.print(monthYear);
         } catch (RuntimeException e) {
                 e.printStackTrace();
         } catch (Exception e) {
            System.out.println(e.getMessage());
         }
-       
-    }
-
-    private static void printCalendar(MonthYear monthYear) {
-        printTitle(monthYear);
-        printWeekDays();
-        printDates(monthYear);
-    }
-
-    private static void printDates(MonthYear monthYear) {
-        int offset = getOffset(getFirstDayOfWeek(monthYear));
-        int lastDayOfMonth = getLastDayOfMonth(monthYear);
-        int day = 1;
-
-        for (int i = 0; i < offset; i++) {
-            System.out.printf("%4s", " ");
-        }
-
-        while (day <= lastDayOfMonth) {
-            System.out.printf("%4d", day);
-            day++;
-            offset++;
-
-            if (offset % 7 == 0) System.out.println();
-        }
-    }
-
-    private static void printWeekDays() {
-       String weekDays = Arrays.stream(DayOfWeek.values())
-            .map(day -> day.name().substring(0, 3))
-            .collect(Collectors.joining(" "));
-        System.out.println(weekDays);
-    }
-
-    private static void printTitle(MonthYear monthYear) {
-        String title = String.format(
-            "%s, %s",
-            monthYear.year(),
-            Month.of(monthYear.month()).name()
-        );
-        System.out.println(title);
     }
 
     private static MonthYear getMonthYear(String[] args) throws Exception {
-        LocalDate currentDate = LocalDate.now();
-        int year = args.length > 0 ? Integer.parseInt(args[0]) : currentDate.getMonthValue();
-        int month = args.length > 1 ? Integer.parseInt(args[1]) : currentDate.getYear();
+        try {
+            int year = getIntValue(args, 0, () -> LocalDate.now().getYear());
+            int month = getIntValue(args, 1, () -> LocalDate.now().getMonthValue());
 
-        MonthYear monthYear = new MonthYear(month, year);
-        validateMonthYear(monthYear);
+            validateYear(year);
+            validateMonth(month);
 
-        return monthYear;
+            return new MonthYear(month, year);
+        } catch (Exception e) {
+            throw new Exception("Invalid input");
+        }
     }
 
-    private static void validateMonthYear(MonthYear monthYear) throws Exception {
-        YearMonth.of(monthYear.year(), monthYear.month());
+    private static Integer getIntValue(String[] args, int index, Supplier<Integer> defaultValue) throws Exception {
+        return args.length > index ? Integer.parseInt(args[index]) : defaultValue.get();
     }
 
-    private static int getFirstDayOfWeek(MonthYear monthYear) {
-        return LocalDate.of(monthYear.year(), monthYear.month(), 1)
-            .getDayOfWeek()
-            .getValue();
+    private static void validateYear(int year) throws Exception {
+        Year.parse(Integer.toString(year));
     }
 
-    private static int getOffset(int firstWeekDay) {
-        return firstWeekDay - DayOfWeek.MONDAY.getValue();
-    }
-
-    private static int getLastDayOfMonth(MonthYear monthYear) {
-        return LocalDate.of(monthYear.year(), monthYear.month(), 1)
-            .with(TemporalAdjusters.lastDayOfMonth())
-            .getDayOfMonth();
+    private static void validateMonth(int month) throws Exception {
+        Month.of(month);
     }
 }
